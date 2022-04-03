@@ -12,7 +12,9 @@ class Config:
     # SECRET_KEY
     import random
     import string
-    SECRET_KEY = os.environ.get("SECRET_KEY") or random.sample(string.digits + string.ascii_letters, 16)
+    SECRET_KEY = os.environ.get("SECRET_KEY") or "".join(random.sample(string.digits + string.ascii_letters, 16))
+    # SUPER_ADMIN
+    SUPER_ADMIN = os.environ.get("SUPER_ADMIN")
     # SSL_REDIRECT
     SSL_REDIRECT = False
     # SQLAlchemy
