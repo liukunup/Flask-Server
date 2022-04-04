@@ -7,10 +7,13 @@ import string
 from datetime import datetime
 from flask import current_app, url_for
 from .. import db
-from ..exceptions import ValidationError
+from ..exceptions import InvalidException
 
 
 class Permission:
+    """
+    权限 读写改删 / 超级管理
+    """
     READ = 1
     WRITE = 2
     UPDATE = 4
@@ -109,13 +112,6 @@ class App(db.Model):
 
     @staticmethod
     def add_super_admin(name, desc, owner):
-        # 参数检查
-        if name is None or name == "" or len(name) > 128:
-            raise ValidationError("提交信息中 name 参数不合法! 要求: 最长128字符的非空字符串.")
-        if desc is not None and len(desc) > 256:
-            raise ValidationError("提交信息中 desc 参数不合法! 要求: 最长256字符,可空.")
-        if owner is None or owner == "" or len(owner) > 64:
-            raise ValidationError("提交信息中 owner 参数不合法! 要求: 最长64字符的非空字符串.")
         # 检查是否已存在超级管理员
         for app in App.query.all():
             if app.name == name:
@@ -138,6 +134,13 @@ class App(db.Model):
             self.access_key = "".join(random.sample(string.digits + string.ascii_letters, 32))
         if self.secret_key is None:
             self.secret_key = "".join(random.sample(string.digits + string.ascii_letters, 32))
+        # 参数检查
+        if self.name is None or self.name == "" or len(self.name) > 128:
+            raise InvalidException("提交信息中 name 参数不合法!", condition="最长128字符的非空字符串.")
+        if self.desc is not None and len(self.desc) > 256:
+            raise InvalidException("提交信息中 desc 参数不合法!", condition="最长256字符,可空.")
+        if self.owner is None or self.owner == "" or len(self.owner) > 64:
+            raise InvalidException("提交信息中 owner 参数不合法!", condition="最长64字符的非空字符串.")
 
     def can(self, perm):
         return self.role is not None and self.role.has_permission(perm)
@@ -162,12 +165,6 @@ class App(db.Model):
         name = json_obj.get("name")
         desc = json_obj.get("desc")
         owner = json_obj.get("owner")
-        if name is None or name == "" or len(name) > 128:
-            raise ValidationError("提交信息中 name 参数不合法! 要求: 最长128字符的非空字符串.")
-        if desc is not None and len(desc) > 256:
-            raise ValidationError("提交信息中 desc 参数不合法! 要求: 最长256字符,可空.")
-        if owner is None or owner == "" or len(owner) > 64:
-            raise ValidationError("提交信息中 owner 参数不合法! 要求: 最长64字符的非空字符串.")
         return App(name=name, desc=desc, owner=owner)
 
     def __repr__(self):

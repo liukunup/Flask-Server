@@ -4,12 +4,12 @@
 from datetime import datetime
 from flask import url_for
 from .. import db
-from ..exceptions import ValidationError
+from ..exceptions import InvalidException
 
 
 class User(db.Model):
     # 表名称
-    __tablename__ = 'user'
+    __tablename__ = "user"
     # 表字段
     # 记录编号
     id = db.Column(db.BigInteger, primary_key=True)
@@ -25,22 +25,22 @@ class User(db.Model):
 
     def to_json(self):
         json_obj = {
-            'url': url_for('api.get_user', uid=self.id),
-            'id': self.id,
-            'nickname': self.nickname,
-            'username': self.username,
-            'create_time': self.create_time,
-            'update_time': self.update_time,
+            "url": url_for("api.get_user", uid=self.id),
+            "id": self.id,
+            "nickname": self.nickname,
+            "username": self.username,
+            "create_time": self.create_time,
+            "update_time": self.update_time,
         }
         return json_obj
 
     @staticmethod
     def from_json(json_obj):
-        nickname = json_obj.get('nickname')
-        username = json_obj.get('username')
-        if username is None or username == '' or len(username) > 64:
-            raise ValidationError('提交信息中 username 参数不合法! 要求: 最长64字符的非空字符串.')
+        nickname = json_obj.get("nickname")
+        username = json_obj.get("username")
+        if username is None or username == "" or len(username) > 64:
+            raise InvalidException("提交信息中 username 参数不合法!", condition="最长64个字符的非空字符串.")
         return User(username=username, nickname=nickname)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return "<User %r>" % self.username
