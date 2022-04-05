@@ -46,11 +46,13 @@ class TestingConfig(Config):
     测试环境配置
     """
     #
+    TESTING = True
+    #
     MYSQL_HOST = os.environ.get("MYSQL_HOST") or "127.0.0.1"
     MYSQL_PORT = os.environ.get("MYSQL_PORT") or "3306"
     MYSQL_USERNAME = os.environ.get("MYSQL_USERNAME") or "root"
     MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD") or "123456"
-    MYSQL_DATABASE = os.environ.get("MYSQL_DATABASE") or "db_name"
+    MYSQL_DATABASE = os.environ.get("MYSQL_DATABASE") or "db"
     # 数据库链接
     SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USERNAME}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/" \
                               f"{MYSQL_DATABASE}"
@@ -61,8 +63,14 @@ class ProductionConfig(Config):
     生产环境配置
     """
     # 数据库链接
-    SQLALCHEMY_DATABASE_URI = os.environ.get("PROD_DATABASE_URL") or \
-        "sqlite:///" + os.path.join(basedir, "prod.sqlite")
+    MYSQL_HOST = os.environ.get("MYSQL_HOST") or "127.0.0.1"
+    MYSQL_PORT = os.environ.get("MYSQL_PORT") or "3306"
+    MYSQL_USERNAME = os.environ.get("MYSQL_USERNAME") or "root"
+    MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD") or "123456"
+    MYSQL_DATABASE = os.environ.get("MYSQL_DATABASE") or "db"
+    # 数据库链接
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USERNAME}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/" \
+                              f"{MYSQL_DATABASE}"
 
 
 config = {

@@ -9,8 +9,8 @@ class BaseCustomException(ApiResult, Exception):
     自定义异常基类
     Tips: 异常返回也是接口返回的一种,因此要保持和ApiResult一致; 建议继承此基类,定义清楚错误返回码
     """
-    def __init__(self, code, message, payload=None):
-        super().__init__(code, message, payload)
+    def __init__(self, message, code, payload=None):
+        super().__init__(message, code, payload)
 
     def to_dict(self):
         ret = dict()
