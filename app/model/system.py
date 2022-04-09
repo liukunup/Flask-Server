@@ -146,7 +146,7 @@ class App(db.Model):
         return self.role is not None and self.role.has_permission(perm)
 
     def to_json(self):
-        json_obj = {
+        ret = {
             "url": url_for("api.get_app", app_id=self.id),
             "id": self.id,
             "name": self.name,
@@ -158,13 +158,13 @@ class App(db.Model):
             "create_time": self.create_time,
             "update_time": self.update_time,
         }
-        return json_obj
+        return ret
 
     @staticmethod
-    def from_json(json_obj):
-        name = json_obj.get("name")
-        desc = json_obj.get("desc")
-        owner = json_obj.get("owner")
+    def from_json(obj):
+        name = obj.get("name")
+        desc = obj.get("desc")
+        owner = obj.get("owner")
         return App(name=name, desc=desc, owner=owner)
 
     def __repr__(self):

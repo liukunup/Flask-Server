@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# -*- coding: UTF-8 -*-
-
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -9,14 +6,10 @@ class Config:
     """
     参数配置基类
     """
-    # SECRET_KEY
-    import random
-    import string
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "".join(random.sample(string.digits + string.ascii_letters, 16))
     # SUPER_ADMIN
     SUPER_ADMIN = os.environ.get("SUPER_ADMIN")
-    # SSL_REDIRECT
-    SSL_REDIRECT = False
+    # USE_TALISMAN
+    USE_TALISMAN = False
     # SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
@@ -45,9 +38,9 @@ class TestingConfig(Config):
     """
     测试环境配置
     """
-    #
+    # 测试标识
     TESTING = True
-    #
+    # 常用测试数据库（局域网专用实例）
     MYSQL_HOST = os.environ.get("MYSQL_HOST") or "127.0.0.1"
     MYSQL_PORT = os.environ.get("MYSQL_PORT") or "3306"
     MYSQL_USERNAME = os.environ.get("MYSQL_USERNAME") or "root"
@@ -73,10 +66,43 @@ class ProductionConfig(Config):
                               f"{MYSQL_DATABASE}"
 
 
+class DockerConfig(ProductionConfig):
+    """
+    Docker 生产环境配置
+    """
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+        # log to stderr
+        import logging
+        from logging import StreamHandler
+        stream_handler = StreamHandler()
+        stream_handler.setLevel(logging.INFO)
+        app.logger.addHandler(stream_handler)
+
+
+class UnixConfig(ProductionConfig):
+    """
+    Unix 生产环境配置
+    """
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+        # log to syslog
+        import logging
+        from logging.handlers import SysLogHandler
+        syslog_handler = SysLogHandler()
+        syslog_handler.setLevel(logging.INFO)
+        app.logger.addHandler(syslog_handler)
+
+
 config = {
-    # 环境配置标识
-    "dev": DevelopmentConfig,
-    "test": TestingConfig,
-    "prod": ProductionConfig,
+    # 环境标识
+    "development": DevelopmentConfig,
+    "testing": TestingConfig,
+    "production": ProductionConfig,
+    "docker": DockerConfig,
+    "unix": UnixConfig,
+    # 默认使用开发环境
     "default": DevelopmentConfig
 }

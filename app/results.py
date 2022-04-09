@@ -30,7 +30,7 @@ class Success(ApiResult):
 
 class Failed(ApiResult):
     """
-    成功
+    失败
     """
     def __init__(self, payload):
-        super().__init__("success", -1, payload=payload)
+        super().__init__("failed", -1, payload=payload)

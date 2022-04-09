@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# -*- coding: UTF-8 -*-
-
 from .results import ApiResult
 
 
@@ -31,6 +28,11 @@ class InvalidException(BaseCustomException):
         super().__init__(message, -1001, payload={"condition": condition})
 
 
+class UnsupportedFormatException(BaseCustomException):
+    def __init__(self, fmt):
+        super().__init__("Unsupported format!", -1002, {"solution": f"格式: {fmt}"})
+
+
 class NoSuchAppException(BaseCustomException):
     def __init__(self):
         super().__init__("No such application!", -2000, {"solution": "请 检查公钥填写是否正确 或 联系管理员开通应用."})
@@ -49,8 +51,3 @@ class DiffSignatureException(BaseCustomException):
 class ExpiredTimestampException(BaseCustomException):
     def __init__(self, period):
         super().__init__("Expired timestamp found!", -3001, {"solution": f"有效期: {period}"})
-
-
-class UnsupportedFormatException(BaseCustomException):
-    def __init__(self, format):
-        super().__init__("Unsupported format!", -1005, {"solution": f"格式: {format}"})

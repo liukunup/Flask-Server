@@ -12,7 +12,7 @@ from ..results import Success, Failed
 def get_app(app_id):
     app = db.session.query(App).filter(App.id == app_id).first()
     if app is None:
-        return jsonify(Failed(None).to_dict())
+        return jsonify(Failed("No such application.").to_dict())
     return jsonify(Success(app.to_json()).to_dict())
 
 

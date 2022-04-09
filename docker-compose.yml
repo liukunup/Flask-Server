@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+
+  flaskr:
+    build: .
+    hostname: flaskr
+    restart: always
+    ports:
+      - "8080:5000"
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_CONFIG=docker
+      - SUPER_ADMIN=Administrator
+      - MYSQL_HOST=dbserver
+      - MYSQL_PORT=3306
+      - MYSQL_USERNAME=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    links:
+      - mysql:dbserver
+    depends_on:
+      - mysql
+    networks:
+      - flaskr-stack
+
+  mysql:
+    container_name: flask-server-mysql
+    image: mysql:${MYSQL_VERSION}
+    hostname: mysql
+    restart: always
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - ${HOME}/docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - flaskr-stack
+
+networks:
+  flaskr-stack:
+    driver: bridge

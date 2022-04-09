@@ -1,10 +1,10 @@
-s# Flask-Server
+# Flask-Server
 
 基于Flask框架的服务器开发模板
 
-## 入门第一课
+## 入门指引
 
-- 配置虚拟环境
+### 1. 配置虚拟环境
 
 ```shell
 # 切换到此目录
@@ -15,45 +15,48 @@ python3 -m venv venv
 . venv/bin/activate
 ```
 
-- 安装Flask
+### 2. 做好准备工作
 
-```shell
-pip install Flask
+```dotenv
+# FLASK框架配置
+FLASK_APP=main.py
+FLASK_ENV=development
+FLASK_CONFIG=development
+# 设置超级管理员
+SUPER_ADMIN=Administrator
+# 数据库配置
+MYSQL_HOST=127.0.0.1
+MYSQL_PORT=3306
+MYSQL_USERNAME=root
+MYSQL_PASSWORD=123456
+MYSQL_DATABASE=db
+# 数据库管理密码
+MYSQL_ROOT_PASSWORD=123456
+# 数据库版本
+MYSQL_VERSION=5.7
 ```
 
-- 运行Flask
+### 3. 数据库准备
+
+首次使用时需要先新建数据库
 
 ```shell
-export FLASK_APP=main
-export FLASK_CONFIG=dev 
-export FLASK_ENV=development
+# 数据库初始化
+flask db init
+# 数据库迁移
+flask db migrate -m 'Init'
+# 部署数据
+flask deploy
+# 启动服务
 flask run
 ```
 
-按 CTRL+C 关闭上述服务
+## 安装部署
 
-- 使用MYSQL数据库
-
-```shell
-export MYSQL_HOST=127.0.0.1
-export MYSQL_PORT=3306
-export MYSQL_USERNAME=root
-export MYSQL_PASSWORD=123456
-export MYSQL_DATABASE=database
-```
-
-- 创建或销毁表
-
-首次使用时需要先新建数据库，并使用如下命令创建表
+### 镜像构建
 
 ```shell
-flask create
-```
-
-如需要删除表
-
-```shell
-flask destroy
+docker build -t liukunup/flaskr:v1.0.0 -f Dockerfile .
 ```
 
 ## FAQ
