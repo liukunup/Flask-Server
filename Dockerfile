@@ -26,8 +26,9 @@ WORKDIR /home/FlaskBoot
 
 # 环境部署
 COPY requirements requirements
-RUN python3 -m venv venv
-RUN venv/bin/pip install -r requirements/docker.txt
+RUN    python -m venv venv \
+    && venv/bin/python3 -m pip install --upgrade pip \
+    && venv/bin/pip install -r requirements/docker.txt
 
 # 拷贝源文件
 COPY server server
