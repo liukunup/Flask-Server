@@ -72,4 +72,4 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-          repository: ${{ env.DOCKER_HUB_REPO }}
+          repository: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-boot
