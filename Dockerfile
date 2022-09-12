@@ -26,10 +26,16 @@ WORKDIR /home/FlaskBoot
 
 # 环境部署
 COPY requirements requirements
-RUN    python -m venv venv \
+RUN    apk update \
+	&& apk upgrade \
+	&& apk add ca-certificates \
+	&& update-ca-certificates \
+    && apk add --update gcc bash \
+    && rm -rf /var/cache/apk/* \
+    && python3 -m venv venv \
     && venv/bin/python3 -m pip install --upgrade pip \
     && . venv/bin/activate \
-    && venv/bin/pip install -r requirements/docker.txt
+    && venv/bin/pip3 install -r requirements/docker.txt
 
 # 拷贝源文件
 COPY server server
