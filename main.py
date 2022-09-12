@@ -13,11 +13,21 @@ import click
 import unittest
 
 from flask_migrate import Migrate, upgrade
-from app import create_app, db
-from app.model.system import Role, App
+from server import create_app, db
+from server.model.rbca import Role
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
+
+
+# @app.before_request
+# def before_request():
+#     pass
+#
+#
+# @app.after_request
+# def after_request():
+#     pass
 
 
 @app.cli.command()
@@ -27,8 +37,6 @@ def deploy():
     upgrade()
     # 创建角色
     Role.insert_roles()
-    # 创建超级管理员
-    App.add_super_admin(os.getenv("SUPER_ADMIN") or "Administrator", "This is a super administrator.", "Admin")
 
 
 @app.cli.command()

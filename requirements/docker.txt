@@ -1,2 +1,4 @@
 -r production.txt
-gunicorn==20.1.0
+
+# HTTP服务器
+gunicorn

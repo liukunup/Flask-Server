@@ -1,3 +1,4 @@
 -r development.txt
-PyMySQL==1.0.2
-Flask-Talisman==1.0.0
+
+# 用于管理 HTTPS 和安全头部
+Flask-Talisman
