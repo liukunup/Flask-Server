@@ -1,5 +1,5 @@
 # 基础镜像
-FROM python:3.9-alpine
+FROM python:3.10-slim-bullseye
 # 作者信息
 LABEL LIUKUN="liukunup@outlook.com"
 
@@ -26,13 +26,7 @@ WORKDIR /home/FlaskBoot
 
 # 环境部署
 COPY requirements requirements
-RUN    apk update \
-	&& apk upgrade \
-	&& apk add ca-certificates \
-	&& update-ca-certificates \
-    && apk add --update gcc bash \
-    && rm -rf /var/cache/apk/* \
-    && python3 -m venv venv \
+RUN    python3 -m venv venv \
     && venv/bin/python3 -m pip install --upgrade pip \
     && . venv/bin/activate \
     && venv/bin/pip3 install -r requirements/docker.txt
